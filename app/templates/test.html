@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.flex-container {
+    /*  */
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    text-align: center;
+}
+.flex-container > * {
+    padding: 15px;
+    -webkit-flex: 1 100%;
+    flex: 1 100%;
+}
+.article {
+    text-align: left;
+}
+header {background: black;color:white;}
+footer {background: #aaa;color:white;}
+.nav {background:#eee;}
+.nav ul {
+    list-style-type: none;
+    font-size:24px;
+    padding: 0;
+}
+.nav ul a {
+ text-decoration: none;
+}
+@media all and (min-width: 768px) {
+    .nav {text-align:left;-webkit-flex: 1 auto;flex:1 auto;-webkit-order:1;order:1;}
+    .article {-webkit-flex:5 0px;flex:5 0px;-webkit-order:2;order:2;}
+    footer {-webkit-order:3;order:3;}
+}
+</style>
+</head>
+
+<body>
+    <div class="flex-container">
+        <header>
+          <h1>Health Monitor Platform</h1>
+        </header>
+
+         <h2 id="show"></h2>
+
+
+        <nav class="nav">
+            <form id = "search"  action="search" method = "POST">
+             <br></br>
+              Search Name:
+              <br></br>
+              <input type="text" name="search_name"  placeholder="Mary Sandra">
+              <br></br>
+              <input type="submit" value="Submit">
+            </form>
+
+            <p id = "search_result"></p>
+
+            <hr>
+            <ul id = "name_list">
+              <li>Jason Sandra</li>
+              <li>Susan Gregory</li>
+              <li>Kenneth Jonathan</li>
+              <li>Ryan William</li>
+              <li>Eric Debra</li>
+              <li>James Edward</li>
+            </ul>
+        </nav>
+
+
+        <article class="article">
+         <div id="container" style="height: 400px; min-width: 310px"></div>
+        </article>
+
+        <footer>2016 Insight Data Engineering Fellow.  
+        <br></br>    
+        <a href = "https://docs.google.com/presentation/d/1flMn2waduRLvoU9rn_o9kT73yvg4pUzHyn-i1D9i91s/edit#slide=id.g1775c83742_0_1">Demo Slides</a>         
+        <a href = "https://github.com/jianshizhao"> Github Profile</a>        
+        <a href = "https://www.linkedin.com/in/jianshizhao"> Linkedin Profile</a></footer>
+    </div>
+
+</body>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+</script>
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+
+
+<script>
+    
+$(function () {
+    Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    }); 
+    // Create the chart
+        function getValuefromJson(jm){
+                return [(new Date(jm.time)).getTime(),jm.hr];
+        }
+        
+    var url_ini = "http://ec2-34-192-175-58.compute-1.amazonaws.com:5000/hrini/other-google";
+    
+        $.getJSON(url_ini,function(value){              
+                var data_db = value.records.map(getValuefromJson).reverse();            
+ 
+            $('#container').highcharts('StockChart', {
+                chart: {
+                    events: {
+                        load: function () {
+        
+                            // set up the updating of the chart each second
+                            var series = this.series[0];
+                            setInterval(function () {                           
+                                var url = "http://ec2-34-192-175-58.compute-1.amazonaws.com:5000/hr/other-google";
+                                $.getJSON(url,function(data){                                   
+                                                                var x = (new Date(data.record[0].time)).getTime(),
+                                                y = data.record[0].count;
+                                    series.addPoint([x, y], true, false);       
+                                 });                    
+                            }, 1000);
+                        }
+                    }
+                },
+                rangeSelector: {
+                    buttons: [{
+                        count: 20,
+                        type: 'minute',
+                        text: '20M'
+                    }, {
+                        count: 1,
+                        type: 'hour',
+                        text: '1H'
+                    }, {
+                        type: 'all',
+                        text: 'All'
+                    }],
+                    inputEnabled: false,
+                    selected: 0
+                },
+        
+                title: {
+                    text: 'Live Averaged Heart Rate'
+                },
+        
+                exporting: {
+                    enabled: false
+                },
+        
+                series: [{
+                    name: 'Average Heart Rate',
+                    data: data_db
+                }]
+            });
+            $("#show").text("Jason Sandra");
+   
+ 
+    });  
+ 
+
+});
+</script>
+
+
+
+
+
+
+
+</html>

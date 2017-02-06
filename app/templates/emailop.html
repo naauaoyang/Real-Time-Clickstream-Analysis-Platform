@@ -1,0 +1,33 @@
+{% extends "mybase.html" %}
+{% block emailop %}
+<div class="container">
+     <div class="starter-template">
+       <div class="row" style="height:100vh;">
+               <div class="col-md-10 col-md-offset-1">
+                   <table class="table">
+                     <thead>
+                       <tr>
+                         <th>id</th>
+                         <th>time</th>
+                         <th>fname</th>
+                         <th>lname</th>
+                         <th>message</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       {% for val in output %}
+                       <tr>
+                         <td>{{val.id}}</td>
+                         <td>{{val.time}}</td>
+                         <td>{{val.fname}}</td>
+                         <td>{{val.lname}}</td>
+                         <td>{{val.message}}</td>
+                       </tr>
+                       {% endfor %}
+                     </tbody>
+                   </table>
+               </div>
+       </div>
+     </div>
+   </div>
+{% endblock %}

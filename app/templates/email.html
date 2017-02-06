@@ -1,0 +1,24 @@
+{% extends "mybase.html" %} <!--this means that you are extending the base tempate -->
+{% block emailid %} <!-- this is the name of the block below -->
+       <div class="row" style="height:100vh;">
+               <div class="col-md-4 col-md-offset-4" style="margin-top:10vh;">
+                       <form action"emailop" method="POST">
+<!-- action is the html template that will return the result to this input query -->
+                               <div class="form-group text-center">
+                                       <label style="font-weight:300; font-size:36px;">Type in an email id</label>
+                                       <br /><br />
+                                       <input type="text" class="form-control" id="emailid" name="emailid" placeholder="abc@example.com">
+                                       <select class="form-control" name="date">
+                                               <option>2015-09-01</option>
+                                               <option>2015-09-02</option>
+                                               <option>2015-09-03</option>
+                                       </select>
+                                       <br /><br />
+
+                                       <button type="submit" value="Send" name="emailid-container" class="btn btn-default id-submit">Submit</button>
+                               </div>
+                       </form>
+               </div>
+       </div>
+
+{% endblock %}

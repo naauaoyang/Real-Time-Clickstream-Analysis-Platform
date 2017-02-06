@@ -1,0 +1,29 @@
+<html>
+<body>
+ <p id="title">UTC Clock</p>
+ <p id="clock">Current Time</p>
+</body>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+</script>
+
+<script>
+
+function anyFunction()
+{
+ function fixTimeFormat(i) {
+    return ( i < 10 ) ? "0" + i : i;
+ }
+ var today = new Date(),
+    h = fixTimeFormat(today.getHours()),
+    m = fixTimeFormat(today.getMinutes()),
+    s = fixTimeFormat(today.getSeconds());
+ document.getElementById("clock").innerHTML = h + ":" + m + ":" + s;
+}
+
+$(function () {
+ setInterval(anyFunction, 2000);
+});
+
+</script>
+</html>
