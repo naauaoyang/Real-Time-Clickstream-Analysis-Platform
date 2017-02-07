@@ -16,3 +16,6 @@ TH CLUSTERING ORDER BY (total_count DESC);
 
 CREATE TABLE realtime_source (source text, topic text, count int, timestamp timestamp, PRIMARY KEY(topic, timestam
 p, count)) WITH CLUSTERING ORDER BY (timestamp DESC, count DESC);
+
+CREATE TABLE realtime (source text, count int, timestamp timestamp, PRIMARY KEY(source, timestamp, count)) WITH CL
+USTERING ORDER BY (timestamp DESC, count DESC);

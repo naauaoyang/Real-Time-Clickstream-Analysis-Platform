@@ -13,15 +13,16 @@ cluster = Cluster(['ec2-34-192-175-58.compute-1.amazonaws.com'])
 #session = cluster.connect('playground')
 session = cluster.connect('wiki')
 
-
+'''
 @app.route('/')
 @app.route('/index')
 def index():
     user = { 'nickname': 'Miguel' } # fake user
     mylist = [1,2,3,4]
     return render_template("index.html", title = 'Home', user = user, mylist = mylist)
+'''
 
-
+'''
 @app.route('/api/<source>/')
 def get_email(source):
     stmt = "SELECT * FROM batch_source WHERE source=%s LIMIT 10"
@@ -31,6 +32,7 @@ def get_email(source):
         response_list.append(val)
     jsonresponse = [{"source": x.source, "count": x.count, "topic": x.topic} for x in response_list]
     return jsonify(jsonresponse)
+'''
 
 '''
 @app.route('/api/<email>/<date>')
@@ -96,21 +98,19 @@ def wiki_post_source():
     
     return render_template("sourceop.html", output=jsonresponse)
 
-
-
-
+'''
 @app.route('/realtime')
 def realtime():
     return render_template("realtime.html")
-
+'''
 
 @app.route('/test')
 def test():
-    return render_template("test.html")
+    return render_template("test1.html")
 
 @app.route('/hrini/<source>/')
 def get_hrini(source):
-    stmt = "SELECT * FROM realtime_source WHERE source=%s limit 10"
+    stmt = "SELECT * FROM realtime WHERE source=%s limit 10"
     response = session.execute(stmt, parameters = [source])
     response_list = []
     for val in response:
@@ -120,10 +120,19 @@ def get_hrini(source):
 
 @app.route('/hr/<source>/')
 def get_hr(source):
-    stmt = "SELECT * FROM realtime_source WHERE source=%s limit 1"
+    stmt = "SELECT * FROM realtime WHERE source=%s limit 1"
     response = session.execute(stmt, parameters = [source])
     response_list = []
     for val in response:
         response_list.append(val)
     jsonresponse = [{"source":x.source,"count":x.count,"time":x.timestamp} for x in response_list]
     return jsonify(record = jsonresponse)
+
+@app.route('/search',methods = ['POST'])
+def search_name():
+    s_name = request.form["search_name"]
+    if s_name in ('google', 'wikipedia', 'bing', 'yahoo', 'twitter', 'facebook'):
+        jsonresponse = {"name": s_name, "check": "Name Exists"}
+        return jsonify(result = jsonresponse)
+    else:
+        return jsonify(result={"name":s_name,"check":"Name Not Exists"})

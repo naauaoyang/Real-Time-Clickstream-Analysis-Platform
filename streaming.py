@@ -26,28 +26,28 @@ def process(rdd):
         df.createOrReplaceTempView("wiki")
 
         #sqlDF = spark.sql("SELECT * FROM wiki")
-        sqlDF = spark.sql("SELECT prev_title as source, curr_title as topic, count(*) as count, max(timestamp) as timestamp FROM wiki group by prev_title, curr_title")
-        #sqlDF = spark.sql("SELECT prev_title, curr_title, n, type, timestamp FROM wiki LIMIT 10")
-        #sqlDF = spark.sql("SELECT prev_title as source, curr_title as topic, n as count, timestamp as timestamp FROM wiki")
+        sqlDF = spark.sql("SELECT prev_title as source, count(*) as count, max(timestamp) as timestamp FROM wiki group by prev_title")
+        #sqlDF = spark.sql("SELECT prev_title as source, curr_title as topic, count(*) as count, max(timestamp) as timestamp FROM wiki group by prev_title, curr_title")
         sqlDF.show()
         
-        '''
+        
         sqlDF.write \
              .format("org.apache.spark.sql.cassandra") \
              .mode('append') \
-             .options(table="realtime_source", keyspace="wiki") \
+             .options(table="realtime", keyspace="wiki") \
              .save()
-        '''
+        
+      
       
     except:
         pass
 
 if __name__ == "__main__":
     sc = SparkContext(master='spark://ip-172-31-1-142:7077', appName="wiki")
-    ssc = StreamingContext(sc, 5)
+    ssc = StreamingContext(sc, 1)
 
     kafkaStream = KafkaUtils.createDirectStream(ssc, 
-                                                ["wiki"], 
+                                                ["clickstream"], 
                                                 {"bootstrap.servers": "ec2-34-192-175-58.compute-1.amazonaws.com:9092"})
     
     #kafkaStream.pprint()
