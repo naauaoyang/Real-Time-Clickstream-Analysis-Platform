@@ -1,0 +1,31 @@
+{% extends "mybase.html" %}
+{% block pagerank %}
+<div class="container">
+     <div class="starter-template">
+       <div class="row" style="height:100vh;">
+               <div class="col-md-10 col-md-offset-1">
+                   <table class="table">
+                     <thead>
+                       <tr>
+                         <th>date</th>
+                         <th>topic</th>
+                         <th>rank</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       {% for val in output %}
+                       <tr>
+                         <td>{{val.date}}</td>
+                         <td>{{val.topic}}</td>
+                         <td>{{val.rank}}</td>
+                       </tr>
+                       {% endfor %}
+                     </tbody>
+                   </table>
+               </div>
+       </div>
+     </div>
+   </div>
+{% endblock %}
+
+

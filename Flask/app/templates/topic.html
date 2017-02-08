@@ -1,0 +1,31 @@
+{% extends "mybase.html" %}
+{% block topic %}
+<div class="container">
+     <div class="starter-template">
+       <div class="row" style="height:100vh;">
+               <div class="col-md-10 col-md-offset-1">
+                   <table class="table">
+                     <thead>
+                       <tr>
+                         <th>topic</th>
+                         <th>source</th>
+                         <th>count</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       {% for val in output %}
+                       <tr>
+                         <td>{{val.topic}}</td>
+                         <td>{{val.source}}</td>
+                         <td>{{val.count}}</td>
+                       </tr>
+                       {% endfor %}
+                     </tbody>
+                   </table>
+               </div>
+       </div>
+     </div>
+   </div>
+{% endblock %}
+
+
