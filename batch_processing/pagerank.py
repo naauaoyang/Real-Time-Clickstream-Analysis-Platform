@@ -26,7 +26,6 @@ if __name__ == "__main__":
         
     df = spark.read.json('hdfs://ec2-34-192-175-58.compute-1.amazonaws.com:9000/user/*.dat') \
          .select(concat(col("prev_title"), lit(" "), col("curr_title")))
-         #.select(concat(col("prev_id"), lit(" "), col("curr_id")))
     
     lines = df.rdd.map(lambda r: r[0])
     

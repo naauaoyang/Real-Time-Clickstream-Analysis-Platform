@@ -30,14 +30,11 @@ def process(rdd):
         #sqlDF = spark.sql("SELECT prev_title as source, curr_title as topic, count(*) as count, max(timestamp) as timestamp FROM wiki group by prev_title, curr_title")
         sqlDF.show()
         
-        
         sqlDF.write \
              .format("org.apache.spark.sql.cassandra") \
              .mode('append') \
              .options(table="realtime", keyspace="wiki") \
              .save()
-        
-      
       
     except:
         pass
@@ -50,15 +47,10 @@ if __name__ == "__main__":
                                                 ["clickstream"], 
                                                 {"bootstrap.servers": "ec2-34-192-175-58.compute-1.amazonaws.com:9092"})
     
-    #kafkaStream.pprint()
-    
     lines = kafkaStream.map(lambda x: x[1])
-    #lines.pprint()
     
     lines.foreachRDD(process)
     
-    
     ssc.start()
     ssc.awaitTermination()
-    #ssc.stop()
     

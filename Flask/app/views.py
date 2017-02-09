@@ -12,11 +12,11 @@ from cassandra.cluster import Cluster
 cluster = Cluster(['ec2-34-192-175-58.compute-1.amazonaws.com'])
 session = cluster.connect('wiki')
 
-@app.route('/batch')
+@app.route('/')
 def batch():
     return render_template("batch.html")
 
-@app.route("/batch", methods=['POST'])
+@app.route("/", methods=['POST'])
 def wiki_post_source():
     task = request.form["task"]
     keywords = request.form["keywords"]
@@ -75,12 +75,3 @@ def get_hr(source):
         response_list.append(val)
     jsonresponse = [{"source":x.source,"count":x.count,"time":x.timestamp} for x in response_list]
     return jsonify(record = jsonresponse)
-
-@app.route('/search',methods = ['POST'])
-def search_name():
-    s_name = request.form["search_name"]
-    if s_name in ('google', 'wikipedia', 'bing', 'yahoo', 'twitter', 'facebook'):
-        jsonresponse = {"name": s_name, "check": "Name Exists"}
-        return jsonify(result = jsonresponse)
-    else:
-        return jsonify(result={"name":s_name,"check":"Name Not Exists"})

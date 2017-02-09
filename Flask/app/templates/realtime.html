@@ -64,25 +64,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="batch">Real-time Clickstream Analysis Platform</a>
+              <a class="navbar-brand" href="/">Real-time Clickstream Analysis Platform</a>
             </div>
           </div>
         </nav>
 
         <div class="flex-container">
             <nav class="nav">
-                <form id = "search"  action="search" method = "POST">
-                 <br>
-                  Search Source:
-                  <br>
-                  <input type="text" name="search_name"  placeholder="google">
-                  <br>
-                  <input type="submit" value="Submit">
-                </form>
-
-                <p id = "search_result"></p>
-
-                <hr>
                 <ul id = "name_list">
                   <li>google</li>
                   <li>wikipedia</li>
@@ -101,7 +89,7 @@
             <br>
             <footer style = "padding: 15px">2017 Insight Data Engineering Fellow.  
             <br>  
-            <a href = "https://docs.google.com/presentation/d/1flMn2waduRLvoU9rn_o9kT73yvg4pUzHyn-i1D9i91s/edit#slide=id.g1775c83742_0_1">Demo Slides</a>         
+            <a href = "https://www.slideshare.net/secret/AjeymuP1BGHTYP">Demo Slides</a>         
             <a href = "https://github.com/naauaoyang"> Github Profile</a>        
             <a href = "https://www.linkedin.com/in/zhuangfei-yang-599b9b7a"> Linkedin Profile</a>
             </footer>
@@ -129,7 +117,7 @@
                     return [(new Date(jm.time)).getTime(),jm.count];
             }
 
-        var url_ini = "http://ec2-34-192-175-58.compute-1.amazonaws.com/hrini/other-google";
+        var url_ini = "hrini/other-google";
 
             $.getJSON(url_ini,function(value){              
                     var data_db = value.records.map(getValuefromJson).reverse();            
@@ -142,7 +130,7 @@
                                 // set up the updating of the chart each second
                                 var series = this.series[0];
                                 setInterval(function () {                           
-                                    var url = "http://ec2-34-192-175-58.compute-1.amazonaws.com/hr/other-google";
+                                    var url = "hr/other-google";
                                     $.getJSON(url,function(data){                                   
                                                                     var x = (new Date(data.record[0].time)).getTime(),
                                                     y = data.record[0].count;
@@ -197,7 +185,7 @@
             // reformat the input source so that it can match the exact term in the database 
             l_exact_value = "other-".concat(l_value)
 
-                var url_pre = "http://ec2-34-192-175-58.compute-1.amazonaws.com/hrini/";
+                var url_pre = "hrini/";
                 var url_req = url_pre.concat(l_exact_value);
 
                     $.getJSON(url_req,function(value){              
@@ -211,7 +199,7 @@
                                         // set up the updating of the chart each second
                                         var series = this.series[0];
                                         setInterval(function () {                           
-                                            var url_hr = "http://ec2-34-192-175-58.compute-1.amazonaws.com/hr/".concat(l_exact_value);
+                                            var url_hr = "hr/".concat(l_exact_value);
                                             $.getJSON(url_hr,function(data){        
                                                                             var x = (new Date(data.record[0].time)).getTime(),
                                                             y = data.record[0].count;
@@ -257,108 +245,6 @@
 
             $("#show").text(l_value);
         });
-
-
-
-       $('#search').submit(function() { // catch the form's submit event
-        $.ajax({ // create an AJAX call...
-            data: $(this).serialize(), // get the form data
-            type: $(this).attr('method'), // GET or POST
-            url: $(this).attr('action'), // the file to call
-            success: function(response) { // on success..
-                $('#search_result').text(response.result.name); // update the DIV
-
-                if(response.result.check == "Name Exists"){
-                    var  itemName = response.result.name;
-                    var itemFound = false;
-                    $('#name_list li').each( function () {
-                                    if ( $(this).text() === itemName ){                                                                                                        
-                                            itemFound = true;
-                                        }
-                                    });
-
-                                    if ( itemFound == true ){
-                                    $('#search_result').text("Already Subscribed");                                                                             
-                                    }
-                                    else {
-                                            $("#name_list").append('<li>' + response.result.name + '</li>');                                        
-                                    }
-       $("li").click(function(){
-            var l_value = $(this).text();
-                    function getValuefromJson(jm){
-                            return [(new Date(jm.time)).getTime(),jm.count];
-                    }
-            // reformat the input source so that it can match the exact term in the database 
-            l_exact_value = "other-".concat(l_value)
-
-                var url_pre = "http://ec2-34-192-175-58.compute-1.amazonaws.com/hrini/";
-                var url_req = url_pre.concat(l_exact_value);
-
-                    $.getJSON(url_req,function(value){              
-                            var data_db = value.records.map(getValuefromJson).reverse();            
-
-                        $('#container').highcharts('StockChart', {
-                            chart: {
-                                events: {
-                                    load: function () {
-
-                                        // set up the updating of the chart each second
-                                        var series = this.series[0];
-                                        setInterval(function () {                           
-                                            var url_hr = "http://ec2-34-192-175-58.compute-1.amazonaws.com/hr/".concat(l_exact_value);
-                                            $.getJSON(url_hr,function(data){        
-                                                                            var x = (new Date(data.record[0].time)).getTime(),
-                                                            y = data.record[0].count;
-                                                series.addPoint([x, y], true, false);                       
-                                                    });                     
-                                        }, 1000);
-                                    }
-                                }
-                            },
-
-                            rangeSelector: {
-                                buttons: [{
-                                    count: 20,
-                                    type: 'minute',
-                                    text: '20M'
-                                }, {
-                                    count: 1,
-                                    type: 'hour',
-                                    text: '1H'
-                                }, {
-                                    type: 'all',
-                                    text: 'All'
-                                }],
-                                inputEnabled: false,
-                                selected: 0
-                            },
-                            title: {
-                                text: 'Live Clicks Count'
-                            },
-
-                            exporting: {
-                                enabled: false
-                            },
-
-                            series: [{
-                                name: 'Clicks Count',
-                                data: data_db
-                            }]
-                        });
-
-                }); 
-
-
-            $("#show").text(l_value);
-        });
-                }
-                else {$('#search_result').text(response.result.check);}
-            }
-            });
-        return false; // cancel original event to prevent form submitting
-        });
-
-
     });
     </script>
 
