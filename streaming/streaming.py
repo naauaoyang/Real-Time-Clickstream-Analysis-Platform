@@ -1,8 +1,10 @@
+from __future__ import print_function
+import sys
+import json
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
-from pyspark.sql import Row, SparkSession
+from pyspark.sql import SparkSession
 from pyspark.streaming.kafka import KafkaUtils
-import json
 
 # Lazily instantiated global instance of SparkSession
 def getSparkSessionInstance(sparkConf):
@@ -18,34 +20,33 @@ def process(rdd):
         # Get the singleton instance of SparkSession
         spark = getSparkSessionInstance(rdd.context.getConf())
 
-        #df = spark.createDataFrame(rowRdd)
         df = spark.read.json(rdd)
-        #df.show()
 
         # Creates a temporary view using the DataFrame
         df.createOrReplaceTempView("wiki")
 
-        #sqlDF = spark.sql("SELECT * FROM wiki")
         sqlDF = spark.sql("SELECT prev_title as source, count(*) as count, max(timestamp) as timestamp FROM wiki group by prev_title")
-        #sqlDF = spark.sql("SELECT prev_title as source, curr_title as topic, count(*) as count, max(timestamp) as timestamp FROM wiki group by prev_title, curr_title")
-        sqlDF.show()
         
+        sqlDF.show()
         sqlDF.write \
              .format("org.apache.spark.sql.cassandra") \
              .mode('append') \
              .options(table="realtime", keyspace="wiki") \
              .save()
-      
     except:
         pass
 
 if __name__ == "__main__":
-    sc = SparkContext(master='spark://ip-172-31-1-142:7077', appName="wiki")
+    if len(sys.argv) != 2:
+        print("Usage: streaming <bootstrap.servers>", file=sys.stderr)
+        exit(-1)
+    
+    sc = SparkContext(appName="wiki")
     ssc = StreamingContext(sc, 1)
 
     kafkaStream = KafkaUtils.createDirectStream(ssc, 
                                                 ["clickstream"], 
-                                                {"bootstrap.servers": "ec2-34-192-175-58.compute-1.amazonaws.com:9092"})
+                                                {"bootstrap.servers": sys.argv[1]})
     
     lines = kafkaStream.map(lambda x: x[1])
     

@@ -10,10 +10,10 @@ import numpy as np
 
 class Producer(object):
 
-    def run(self, data_path):
-        producer = KafkaProducer(bootstrap_servers='ec2-34-192-175-58.compute-1.amazonaws.com:9092')
+    def run(self, data_path, bootstrap_servers):
+        producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
         df = pd.read_csv(data_path)
-        for msg_cnt in range(100):
+        for msg_cnt in range(10000):
             i = np.random.randint(1000)
             data = df.iloc[i:i+1]
             message_info = {'prev_title': df.get_value(i, 'prev_title'),
@@ -21,16 +21,15 @@ class Producer(object):
                             'type': df.get_value(i, 'type'),
                             'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                             }
-            #message_info = json.dumps(message_info, encoding='utf-8', ensure_ascii=False) 
             message_info = json.dumps(message_info, encoding='utf-8') 
             print message_info
             producer.send('clickstream', message_info)
-            time.sleep(0.1)
+            time.sleep(0.01)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: producer <data_path>")
+    if len(sys.argv) != 3:
+        print("Usage: producer <data_path> <bootstrap_servers>")
         exit(-1)
     prod = Producer()
-    prod.run(sys.argv[1])
+    prod.run(sys.argv[1], sys.argv[2])
 

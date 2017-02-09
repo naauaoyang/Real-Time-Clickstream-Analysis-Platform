@@ -1,7 +1,9 @@
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import concat, col, lit
+from __future__ import print_function
+import sys
 from operator import add
 import re
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import concat, col, lit
 
 
 def computeContribs(urls, rank):
@@ -18,13 +20,17 @@ def parseNeighbors(urls):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: batch_process <hdfs_path>", file=sys.stderr)
+        exit(-1)
+    
     # Initialize the spark context.
     spark = SparkSession\
         .builder\
         .appName("PythonPageRank")\
         .getOrCreate()
         
-    df = spark.read.json('hdfs://ec2-34-192-175-58.compute-1.amazonaws.com:9000/user/*.dat') \
+    df = spark.read.json(sys.argv[1]) \
          .select(concat(col("prev_title"), lit(" "), col("curr_title")))
     
     lines = df.rdd.map(lambda r: r[0])
@@ -50,10 +56,12 @@ if __name__ == "__main__":
     sqlDF = spark.sql("SELECT _1 AS topic, _2 AS rank, current_date() as date FROM rank order by _2 DESC LIMIT 100") 
     sqlDF.show()
 
+    '''
     sqlDF.write \
          .format("org.apache.spark.sql.cassandra") \
          .mode('append') \
          .options(table="pagerank", keyspace="wiki") \
          .save()
+    '''
     
     spark.stop()

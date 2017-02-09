@@ -1,3 +1,5 @@
+from __future__ import print_function
+import sys
 import time
 from kafka import KafkaConsumer
 import os
@@ -29,7 +31,6 @@ class Consumer(object):
         
         messageCount = 0
         for message in self.consumer:
-            #print message
             messageCount += 1
             self.temp_file.write(message.value + "\n")
             if messageCount % 1000 == 0:
@@ -71,8 +72,10 @@ class Consumer(object):
 
         
 if __name__ == '__main__':
-
+    if len(sys.argv) != 2:
+        print("Usage: consumer-hdfs <bootstrap_servers>", file=sys.stderr)
+        exit(-1)
     print "\nConsuming messages..."
-    cons = Consumer(bootstrap_servers="ec2-34-192-175-58.compute-1.amazonaws.com:9092", 
+    cons = Consumer(bootstrap_servers=sys.argv[1], 
                     topic="wiki")
-    cons.consume_topic("/home/ubuntu/Real-Time-Clickstream-Analysis-Platform/tmp")
+    cons.consume_topic("tmp")

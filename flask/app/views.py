@@ -1,15 +1,18 @@
+from __future__ import print_function
+import sys
+from datetime import datetime
 from flask import render_template, request
 from flask import jsonify
-
 from app import app
-
-from datetime import datetime
-
 # importing Cassandra modules from the driver we just installed
 from cassandra.cluster import Cluster
 
+if len(sys.argv) != 2:
+    print("Usage: tornadoapp.py <public_dns>", file=sys.stderr)
+    exit(-1)
+    
 # Setting up connections to cassandra
-cluster = Cluster(['ec2-34-192-175-58.compute-1.amazonaws.com'])
+cluster = Cluster([sys.argv[1]])
 session = cluster.connect('wiki')
 
 @app.route('/')
@@ -58,7 +61,7 @@ def test():
 
 @app.route('/hrini/<source>/')
 def get_hrini(source):
-    stmt = "SELECT * FROM realtime WHERE source=%s limit 10"
+    stmt = "SELECT * FROM realtime WHERE source=%s limit 100"
     response = session.execute(stmt, parameters = [source])
     response_list = []
     for val in response:
