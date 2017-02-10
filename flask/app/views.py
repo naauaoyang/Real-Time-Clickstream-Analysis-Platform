@@ -4,11 +4,10 @@ from datetime import datetime
 from flask import render_template, request
 from flask import jsonify
 from app import app
-# importing Cassandra modules from the driver we just installed
 from cassandra.cluster import Cluster
 
 if len(sys.argv) != 2:
-    print("Usage: tornadoapp.py <public_dns>", file=sys.stderr)
+    print("Usage: tornadoapp <public_dns>", file=sys.stderr)
     exit(-1)
     
 # Setting up connections to cassandra
