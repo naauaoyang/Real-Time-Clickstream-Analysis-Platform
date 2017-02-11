@@ -19,6 +19,9 @@ The data pipeline for ClickInsight is shown in the following picture. First gene
 This code was run on Amazon AWS servers.
 ### Install
 This project needs Hadoop, Spark, Zookeeper, Kafka and Cassandra. You can install and configure them according to the official tutorials, or you can use [pegasus](https://github.com/InsightDataScience/pegasus).
+### Preprocessing
+Download February 2015 data to data folder and then run:
+`$ python preprocessing/data_preprocess.py`
 ### Generate Data
 `$ python kafka/producer.py data/preprocessed_data.csv <Kafka bootstrap_servers>`
 ### Batch Processing
@@ -28,7 +31,7 @@ This project needs Hadoop, Spark, Zookeeper, Kafka and Cassandra. You can instal
 `$ spark-submit --master <spark master url> --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.0-M3 batch_processing/batch_process.py <hdfs url>/user/*.dat`
 #### Run PageRank algorithm and Save Results to Cassandra
 `spark-submit --master <spark master url> --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.0-M3 batch_processing/pagerank.py <hdfs url>/user/*.dat`
-### Do Streaming Processing
+### Streaming Processing
 `spark-submit --master <spark master url> --jars spark-streaming-kafka-0-8-assembly_2.11-2.1.0.jar --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.0-M3 streaming/streaming.py <Kafka bootstrap_servers>`
 ### Start Website
 `sudo -E python flask/tornadoapp.py <public_dns>`
