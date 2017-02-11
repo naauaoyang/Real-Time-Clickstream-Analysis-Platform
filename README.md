@@ -29,7 +29,7 @@ This project needs Hadoop, Spark, Zookeeper, Kafka and Cassandra. You can instal
 #### Run PageRank algorithm and Save Results to Cassandra
 `spark-submit --master <spark master url> --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.0-M3 batch_processing/pagerank.py <hdfs url>/user/*.dat`
 ### Do Streaming Processing
-`spark-submit --master <spark master url> --jars streaming/spark-streaming-kafka-0-8-assembly_2.11-2.1.0.jar --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.0-M3 streaming/streaming.py <Kafka bootstrap_servers>`
+`spark-submit --master <spark master url> --jars spark-streaming-kafka-0-8-assembly_2.11-2.1.0.jar --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.0-M3 streaming/streaming.py <Kafka bootstrap_servers>`
 ### Start Website
 `sudo -E python flask/tornadoapp.py <public_dns>`
 
