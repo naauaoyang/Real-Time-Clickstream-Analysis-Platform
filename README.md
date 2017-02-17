@@ -30,11 +30,11 @@ Download February 2015 data to data folder and then run:
 #### Do Batch Processing and Save Results to Cassandra
 `$ spark-submit --master <spark master url> --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.0-M3 batch_processing/batch_process.py <hdfs url>/user/*.dat`
 #### Run PageRank algorithm and Save Results to Cassandra
-`spark-submit --master <spark master url> --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.0-M3 batch_processing/pagerank.py <hdfs url>/user/*.dat`
+`$ spark-submit --master <spark master url> --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.0-M3 batch_processing/pagerank.py <hdfs url>/user/*.dat 10`
 ### Streaming Processing
-`spark-submit --master <spark master url> --jars spark-streaming-kafka-0-8-assembly_2.11-2.1.0.jar --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.0-M3 streaming/streaming.py <Kafka bootstrap_servers>`
+`$ spark-submit --master <spark master url> --jars spark-streaming-kafka-0-8-assembly_2.11-2.1.0.jar --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.0-M3 streaming/streaming.py <Kafka bootstrap_servers>`
 ### Start Website
-`sudo -E python flask/tornadoapp.py <public_dns>`
+`$ sudo -E python flask/tornadoapp.py <public_dns>`
 
 ## Demo
 The presentation is available [here](https://www.slideshare.net/secret/AjeymuP1BGHTYP)
