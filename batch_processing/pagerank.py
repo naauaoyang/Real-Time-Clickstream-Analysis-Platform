@@ -64,7 +64,7 @@ if __name__ == "__main__":
     ranks = weightedLinks.map(lambda url_neighbors: (url_neighbors[0], 1.0))
     
     # Calculates and updates URL ranks continuously using PageRank algorithm.
-    for iteration in range(sys.argv[2]):
+    for iteration in range(int(sys.argv[2])):
         # Calculates URL contributions to the rank of other URLs.
         contribs = weightedLinks.join(ranks).flatMap(
             lambda url_urls_rank: computeContribs(url_urls_rank[1][0], url_urls_rank[1][1]))
@@ -76,9 +76,11 @@ if __name__ == "__main__":
     rankDF.createOrReplaceTempView("rank")
     sqlDF = spark.sql("SELECT _1 AS topic, _2 AS rank, current_date() as date FROM rank order by _2 DESC LIMIT 100") 
     #sqlDF.show()
+    
     sqlDF.write \
          .format("org.apache.spark.sql.cassandra") \
          .mode('append') \
          .options(table="pagerank", keyspace="wiki") \
          .save()
+    
     spark.stop()
