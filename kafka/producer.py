@@ -13,7 +13,7 @@ class Producer(object):
     def run(self, data_path, bootstrap_servers):
         producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
         df = pd.read_csv(data_path)
-        for msg_cnt in range(10000):
+        for msg_cnt in range(3000000):
             i = np.random.randint(1000)
             data = df.iloc[i:i+1]
             message_info = {'prev_title': df.get_value(i, 'prev_title'),

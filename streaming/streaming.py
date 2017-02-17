@@ -28,13 +28,13 @@ def process(rdd):
         sqlDF = spark.sql("SELECT prev_title as source, count(*) as count, max(timestamp) as timestamp FROM wiki group by prev_title")
         
         sqlDF.show()
-        '''
+        
         sqlDF.write \
              .format("org.apache.spark.sql.cassandra") \
              .mode('append') \
              .options(table="realtime", keyspace="wiki") \
              .save()
-        '''
+        
     except:
         pass
 

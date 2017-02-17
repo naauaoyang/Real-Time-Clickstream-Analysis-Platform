@@ -16,11 +16,9 @@ if __name__ == "__main__":
     df = spark.read.json(sys.argv[1])
 
     df.createOrReplaceTempView("wiki")
-    #sqlDF = spark.sql("SELECT prev_title as source, n as count, curr_title as topic FROM wiki")
     sqlDF = spark.sql("SELECT prev_title as source, curr_title as topic, count(*) as count FROM wiki GROUP BY prev_title, curr_title ORDER BY count DESC LIMIT 10")
     sqlDF.show()
     
-    '''
     # TABLE batch_source use source as partitionkey
     sqlDF.write \
          .format("org.apache.spark.sql.cassandra") \
@@ -34,7 +32,6 @@ if __name__ == "__main__":
          .mode('overwrite') \
          .options(table="batch_topic", keyspace="wiki") \
          .save()
-    '''
     
     spark.stop()
 
