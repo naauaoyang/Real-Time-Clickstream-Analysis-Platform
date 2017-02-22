@@ -37,6 +37,6 @@ Download February 2015 data to data folder and then run:
 `$ sudo -E python flask/tornadoapp.py <public_dns>`
 
 ## Demo
-The presentation is available [here](https://www.slideshare.net/secret/AjeymuP1BGHTYP)
+The presentation is available [here](https://docs.google.com/presentation/d/1U2U0Doo2EPh9osboorMb4jAOHzCneGV_Z_hDvs8WjpM/edit?usp=sharing)
 <br>
 The website is [ClickInsight](http://www.clickinsight.us)
