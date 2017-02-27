@@ -1,4 +1,4 @@
-# ClickInsight: A Real-time Clickstream Analysis Platform
+# A Real-time Clickstream Analysis Platform
 
 ## Project Overview
 The motivation for building such a platform is that clickstream data is very common for most companies as long as they have their own websites. For example, the table below shows part of the information we can get from one click. The source means where the click come from and topic is the page that the click goes to. The timestamp is the when the click happens. Using such kind of data, we can do a lot of things, such as user behavior analysis, website resources allocation and etc.
@@ -11,7 +11,7 @@ The motivation for building such a platform is that clickstream data is very com
 I use the February 2015 data from Wikipedia Clickstream dataset. The data can be downloaded from this [link](https://figshare.com/articles/Wikipedia_Clickstream/1305770). The documentation of the data can be found in this [link](https://ewulczyn.github.io/Wikipedia_Clickstream_Getting_Started/)
 
 ## Data Pipeline
-The data pipeline for ClickInsight is shown in the following picture. First generate clickstream data from Wikipedia clickstream dataset. Then use Kafka to ingest the message. Then there is one batch line and one streaming line. The batch line use HDFS to store all the raw data and use spark to do batch processing. The streaming line use Spark Streaming to do nearly real time processing. Both batch and real-time lines will store processed data in Cassandra. Finally use Flask to visualize it.
+The data pipeline for the platform is shown in the following picture. First generate clickstream data from Wikipedia clickstream dataset. Then use Kafka to ingest the message. Then there is one batch line and one streaming line. The batch line use HDFS to store all the raw data and use spark to do batch processing. The streaming line use Spark Streaming to do nearly real time processing. Both batch and real-time lines will store processed data in Cassandra. Finally use Flask to visualize it.
 
 ![pipeline](/image/pipeline.png?raw=true "pipeline")
 
@@ -39,4 +39,3 @@ Download February 2015 data to data folder and then run:
 ## Demo
 The presentation is available [here](https://docs.google.com/presentation/d/1U2U0Doo2EPh9osboorMb4jAOHzCneGV_Z_hDvs8WjpM/edit?usp=sharing)
 <br>
-The website is [here](http://www.clickinsight.us)
